@@ -1,0 +1,1000 @@
+/* =============================================================
+   STYLE.CSS — Main stylesheet
+   Custom historical archive site
+   All design decisions are commented throughout.
+   ============================================================= */
+
+
+/* ── GOOGLE FONTS ────────────────────────────────────────────
+   Three fonts for three different roles:
+   - Cinzel:             headings / titles (classical, Roman feel)
+   - Cormorant Garamond: body text (elegant, editorial serif)
+   - DM Sans:            UI labels, nav, metadata (clean contrast)
+   ---------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;500;600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;1,9..40,300&display=swap');
+
+
+/* ── DESIGN TOKENS ───────────────────────────────────────────
+   All colours and values defined as CSS custom properties so
+   they can be changed in one place and cascade everywhere.
+   The palette is intentionally muted and aged: ink, parchment,
+   gold, cobalt — evoking old manuscripts and archives.
+   ---------------------------------------------------------- */
+:root {
+  --ink:        #0a0906;   /* near-black background */
+  --parchment:  #f5efe2;   /* warm off-white for text */
+  --gold:       #b8973a;   /* primary accent */
+  --gold-lt:    #d4af5a;   /* lighter gold for hover states */
+  --gold-dk:    #8a6e24;   /* darker gold for dividers/rules */
+  --cobalt:     #1a2744;   /* sidebar background */
+  --cobalt-lt:  #243356;   /* reserved for hover/active states */
+  --rust:       #7c3520;   /* available for era-specific accents */
+  --sage:       #4a6650;   /* available for era-specific accents */
+  --cream:      #ede5d0;   /* subtle surface alternative */
+  --sidebar-w:  220px;     /* sidebar width — one place to change it */
+  --ease-silk:  cubic-bezier(0.25, 0, 0.05, 1); /* custom easing for all transitions */
+}
+
+
+/* ── RESET ───────────────────────────────────────────────────
+   Normalise box model and remove browser default spacing
+   so layout is predictable across all browsers.
+   ---------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* Native smooth scrolling for anchor links in the sidebar nav */
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--ink);
+  color: var(--parchment);
+  cursor: default;
+  display: flex;         /* sidebar + main side by side on desktop */
+  font-family: 'Cormorant Garamond', serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased; /* crisper text on macOS/iOS */
+}
+
+/* Global image reset — prevents overflow and layout shift */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* ── CUSTOM SCROLLBAR ────────────────────────────────────────
+   Thin gold scrollbar to match the aesthetic.
+   Only applies in Webkit browsers (Chrome, Safari, Edge).
+   ---------------------------------------------------------- */
+::-webkit-scrollbar        { width: 4px; }
+::-webkit-scrollbar-track  { background: var(--ink); }
+::-webkit-scrollbar-thumb  { background: var(--gold-dk); border-radius: 2px; }
+
+
+/* =====================================================
+   SIDEBAR
+   ===================================================== */
+
+/* Fixed sidebar on the left — always visible on desktop,
+   slides off-screen on mobile and is toggled by JS. */
+.sidebar {
+  background: var(--cobalt);
+  border-right: 1px solid rgba(184, 151, 58, 0.2);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  left: 0;
+  overflow: hidden;
+  padding: 40px 28px;
+  position: fixed;
+  top: 0;
+  transition: transform 0.3s var(--ease-silk);
+  width: var(--sidebar-w);
+  z-index: 100;
+}
+
+/* Subtle cross-hatch texture via inline SVG data URI —
+   avoids an extra HTTP request for a texture image. */
+.sidebar::before {
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b8973a' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.sidebar-logo {
+  color: var(--gold);
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  line-height: 1.3;
+  margin-bottom: 8px;
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.sidebar-tagline {
+  color: rgba(184, 151, 58, 0.5);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+/* Gold gradient rule under the logo — fades to the right
+   so it doesn't feel like a hard border. */
+.sidebar-divider {
+  background: linear-gradient(90deg, var(--gold-dk), transparent);
+  height: 1px;
+  margin-bottom: 18px;
+}
+
+
+/* =====================================================
+   MOBILE MENU TOGGLE
+   ===================================================== */
+
+/* Hidden on desktop, shown on mobile via media query below */
+.menu-toggle {
+  align-items: center;
+  background: var(--cobalt);
+  border: 1px solid rgba(184, 151, 58, 0.3);
+  color: var(--gold);
+  cursor: pointer;
+  display: none;
+  font-size: 1.1rem;
+  height: 40px;
+  justify-content: center;
+  left: 16px;
+  position: fixed;
+  top: 16px;
+  width: 40px;
+  z-index: 200;
+}
+
+/* Dark overlay behind the open sidebar on mobile.
+   Tapping it closes the menu (handled in JS). */
+.sidebar-overlay {
+  backdrop-filter: blur(2px);
+  background: rgba(10, 9, 6, 0.6);
+  display: none;
+  inset: 0;
+  position: fixed;
+  z-index: 99;
+}
+
+/* Show overlay when sidebar is open (toggled by JS) */
+.sidebar-overlay.active {
+  display: block;
+}
+
+
+/* =====================================================
+   TIMELINE NAV
+   ===================================================== */
+
+.timeline {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Static grey track behind the animated fill */
+.timeline-track {
+  background: rgba(184, 151, 58, 0.2);
+  bottom: 8px;
+  left: 8px;
+  position: absolute;
+  top: 8px;
+  width: 1px;
+}
+
+/* Gold fill bar — height updated by JS scroll listener */
+.timeline-fill {
+  background: var(--gold);
+  box-shadow: 0 0 6px var(--gold);
+  height: 0%;
+  left: 8px;
+  position: absolute;
+  top: 8px;
+  transition: height 0.1s linear;
+  width: 1px;
+}
+
+.tl-item {
+  color: rgba(245, 239, 226, 0.45);
+  display: flex;
+  align-items: flex-start;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  gap: 18px;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  padding: 10px 0 10px 28px;
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.3s var(--ease-silk);
+}
+
+/* Small dot marker on the timeline track for each nav item */
+.tl-item::before {
+  background: var(--cobalt);
+  border: 1px solid rgba(184, 151, 58, 0.3);
+  border-radius: 50%;
+  content: '';
+  height: 7px;
+  left: 5px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 0.3s var(--ease-silk);
+  width: 7px;
+}
+
+/* Dot glows gold on hover or when section is active */
+.tl-item:hover,
+.tl-item.active {
+  color: var(--gold-lt);
+}
+
+.tl-item:hover::before,
+.tl-item.active::before {
+  background: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+}
+
+.tl-date {
+  color: rgba(184, 151, 58, 0.35);
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+.tl-item:hover .tl-date {
+  color: rgba(184, 151, 58, 0.6);
+}
+
+/* "About" link pinned to the bottom of the sidebar */
+.tl-about {
+  border-top: 1px solid rgba(184, 151, 58, 0.15);
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+
+/* =====================================================
+   MAIN CONTENT
+   ===================================================== */
+
+/* Offset by sidebar width so content isn't hidden behind it */
+.main-content {
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+  width: calc(100% - var(--sidebar-w));
+}
+
+
+/* =====================================================
+   HOME PANELS
+   ===================================================== */
+
+/* Each era is a full-viewport-height panel the user scrolls through */
+.panel {
+  height: 100vh;
+  min-height: 500px;
+  overflow: hidden;
+  position: relative;
+}
+
+.panel-bg {
+  align-items: center;
+  background-position: center;
+  background-size: cover;
+  color: var(--parchment);
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+
+/* Dark gradient overlay ensures text is legible over any photo */
+.panel-bg::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 9, 6, 0.55) 0%,
+    rgba(10, 9, 6, 0.2) 40%,
+    rgba(10, 9, 6, 0.6) 100%
+  );
+  content: '';
+  inset: 0;
+  position: absolute;
+  z-index: 1;
+}
+
+/* Hero panel uses a diagonal gradient for more visual interest */
+.panel--hero .panel-bg::before {
+  background: linear-gradient(
+    135deg,
+    rgba(10, 9, 6, 0.85) 0%,
+    rgba(26, 39, 68, 0.6) 50%,
+    rgba(10, 9, 6, 0.8) 100%
+  );
+}
+
+.hero-text {
+  animation: heroReveal 1.4s var(--ease-silk) both;
+  max-width: 700px;
+  padding: 40px;
+  z-index: 2;
+}
+
+/* Staggered entrance animation for hero text elements */
+@keyframes heroReveal {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-eyebrow {
+  animation: heroReveal 1.4s 0.1s var(--ease-silk) both;
+  color: var(--gold);
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.hero-text h1 {
+  animation: heroReveal 1.4s 0.2s var(--ease-silk) both;
+  color: var(--parchment);
+  font-family: 'Cinzel', serif;
+  font-size: clamp(2.2rem, 6vw, 5.5rem); /* fluid type — scales with viewport */
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  margin-bottom: 12px;
+}
+
+.hero-text p {
+  animation: heroReveal 1.4s 0.35s var(--ease-silk) both;
+  color: rgba(245, 239, 226, 0.7);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-weight: 300;
+  line-height: 1.7;
+  margin: 0 auto 16px;
+  max-width: 480px;
+}
+
+.hero-scroll-hint {
+  align-items: center;
+  animation: heroReveal 1.4s 0.5s var(--ease-silk) both;
+  color: rgba(184, 151, 58, 0.6);
+  display: inline-flex;
+  flex-direction: column;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  gap: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+/* Animated vertical line beneath "scroll" hint */
+.hero-scroll-hint::after {
+  animation: scrollPulse 2s ease-in-out infinite;
+  background: linear-gradient(to bottom, var(--gold-dk), transparent);
+  content: '';
+  height: 50px;
+  width: 1px;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(1); }
+  50%       { opacity: 1;   transform: scaleY(1.1); }
+}
+
+
+/* =====================================================
+   ERA PANELS
+   ===================================================== */
+
+.era-panel {
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+}
+
+.panel-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Era label is always visible — it gives context even before hover */
+.panel-era-label {
+  color: var(--gold);
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  margin-bottom: 8px;
+  opacity: 1;
+  text-transform: uppercase;
+  transition: opacity 0.6s var(--ease-silk), transform 0.6s var(--ease-silk);
+}
+
+/* Era title and tagline are hidden by default and revealed on hover.
+   This creates a deliberate reveal — the user discovers more by
+   hovering, which suits the archive/exploration concept. */
+.panel h2 {
+  color: var(--parchment);
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.8rem, 4.5vw, 4rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s 0.1s var(--ease-silk), transform 0.7s 0.1s var(--ease-silk);
+}
+
+.panel-tagline {
+  color: rgba(245, 239, 226, 0.55);
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  font-style: italic;
+  margin-top: 6px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s 0.2s var(--ease-silk), transform 0.6s 0.2s var(--ease-silk);
+}
+
+/* Reveal all panel text on hover */
+.era-panel:hover .panel-era-label,
+.era-panel:hover h2,
+.era-panel:hover .panel-tagline {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* "Explore →" arrow appears on hover — gap widens for a subtle
+   motion feel without needing JS. */
+.panel-arrow {
+  align-items: center;
+  bottom: 40px;
+  color: rgba(184, 151, 58, 0.5);
+  display: flex;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  gap: 10px;
+  letter-spacing: 0.2em;
+  opacity: 0;
+  position: absolute;
+  right: 50px;
+  text-transform: uppercase;
+  transition: opacity 0.4s, gap 0.3s;
+  z-index: 2;
+}
+
+.panel-arrow::after {
+  color: var(--gold);
+  content: '→';
+  font-size: 1.1rem;
+}
+
+.era-panel:hover .panel-arrow {
+  gap: 16px;
+  opacity: 1;
+}
+
+
+/* =====================================================
+   DETAIL PAGE
+   ===================================================== */
+
+/* Full-bleed hero image at 70vh — tall enough to be cinematic
+   but leaves room for content below the fold. */
+.hero-detail {
+  align-items: flex-end;
+  display: flex;
+  height: 70vh;
+  min-height: 300px;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-detail img {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  object-position: center top; /* prioritise faces/subjects at the top */
+  position: absolute;
+  width: 100%;
+}
+
+/* Heavy bottom gradient so the title text is always readable
+   regardless of image content. */
+.hero-detail::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 9, 6, 0.1) 0%,
+    rgba(10, 9, 6, 0.3) 50%,
+    rgba(10, 9, 6, 0.95) 100%
+  );
+  content: '';
+  inset: 0;
+  position: absolute;
+  z-index: 1;
+}
+
+/* Title block sits in the bottom-left of the hero image */
+.hero-detail-text {
+  max-width: 900px;
+  padding: 60px 80px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-detail-eyebrow {
+  color: var(--gold);
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.hero-detail h1 {
+  color: var(--parchment);
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.8rem, 5vw, 4.5rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+
+/* =====================================================
+   DETAIL CONTENT
+   ===================================================== */
+
+/* Centred reading column — max-width keeps line lengths
+   comfortable (around 65–75 characters). */
+.detail-content {
+  margin: 0 auto;
+  max-width: 760px;
+  padding: 80px 40px 120px;
+}
+
+.detail-content h2 {
+  color: var(--gold-lt);
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.date {
+  color: rgba(184, 151, 58, 0.55);
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.detail-content p {
+  color: rgba(245, 239, 226, 0.75);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-weight: 300;
+  line-height: 1.85;
+  margin-bottom: 14px;
+}
+
+/* Italic emphasis uses gold to draw the eye without bold weight */
+.detail-content em {
+  color: var(--gold-lt);
+  font-style: italic;
+}
+
+.detail-img {
+  border: 1px solid rgba(184, 151, 58, 0.2);
+  border-radius: 2px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  display: block;
+  margin: 24px 0;
+  width: 100%;
+}
+
+
+/* =====================================================
+   PULL QUOTE
+   ===================================================== */
+
+/* Left-border pull quote — classic editorial treatment.
+   The !important overrides are needed because .detail-content p
+   sets its own colour and size that would otherwise win. */
+.pull-quote {
+  background: rgba(184, 151, 58, 0.04);
+  border-left: 2px solid var(--gold);
+  margin: 22px 0;
+  padding: 20px 32px;
+}
+
+.pull-quote p {
+  color: var(--parchment) !important;
+  font-size: clamp(1.1rem, 2vw, 1.35rem) !important;
+  font-style: italic;
+  line-height: 1.6 !important;
+}
+
+
+/* =====================================================
+   NAVIGATION (detail pages)
+   ===================================================== */
+
+/* Prev / Next navigation at the bottom of each article */
+.detail-nav {
+  align-items: center;
+  border-top: 1px solid rgba(184, 151, 58, 0.15);
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  margin-top: 80px;
+  padding-top: 40px;
+}
+
+.nav-btn {
+  align-items: center;
+  border: 1px solid rgba(184, 151, 58, 0.2);
+  color: rgba(184, 151, 58, 0.6);
+  display: inline-flex;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  gap: 10px;
+  letter-spacing: 0.18em;
+  padding: 14px 24px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: all 0.3s var(--ease-silk);
+}
+
+.nav-btn:hover {
+  background: rgba(184, 151, 58, 0.06);
+  border-color: rgba(184, 151, 58, 0.5);
+  color: var(--gold-lt);
+}
+
+/* .disabled used on first/last pages where prev/next don't exist */
+.nav-btn.disabled {
+  cursor: default;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+/* Fixed "Back to Archive" button — always accessible while reading */
+.nav-btn--back {
+  backdrop-filter: blur(8px);
+  background: rgba(10, 9, 6, 0.7);
+  border-color: rgba(184, 151, 58, 0.25);
+  font-size: 0.65rem;
+  position: fixed;
+  right: 40px;
+  top: 32px;
+  z-index: 50;
+}
+
+
+/* =====================================================
+   ABOUT PAGE
+   ===================================================== */
+
+.about-page {
+  align-items: center;
+  background: var(--ink);
+  display: flex;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 80px;
+  position: relative;
+}
+
+/* Subtle blue radial glow in the background for depth */
+.about-page::before {
+  background: radial-gradient(ellipse at 20% 50%, rgba(26, 39, 68, 0.4) 0%, transparent 60%);
+  content: '';
+  inset: 0;
+  position: absolute;
+}
+
+.about-content {
+  max-width: 680px;
+  position: relative;
+  z-index: 1;
+}
+
+.about-content .eyebrow {
+  color: var(--gold);
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.about-content h1 {
+  color: var(--parchment);
+  font-family: 'Cinzel', serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.about-content p {
+  color: rgba(245, 239, 226, 0.65);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-weight: 300;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+  margin-bottom: 20px;
+  max-width: 600px;
+}
+
+.about-content p strong {
+  color: var(--gold-lt);
+  font-weight: 500;
+}
+
+/* Short gold rule — visual anchor beneath the eyebrow */
+.about-rule {
+  background: var(--gold-dk);
+  height: 1px;
+  margin-bottom: 32px;
+  width: 60px;
+}
+
+
+/* =====================================================
+   CONCEPT SECTION
+   Intro/archive description block on the home page
+   ===================================================== */
+
+#concept {
+  max-width: 600px;
+  margin: 120px auto;
+  padding-left: 24px;
+  color: rgba(245, 239, 226, 0.7);
+  text-align: left;
+  /* Left border echoes the pull-quote treatment */
+  border-left: 1px solid rgba(184, 151, 58, 0.2);
+}
+
+/* Small-caps label using DM Sans for contrast with the serif body */
+#concept h2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 16px;
+}
+
+#concept p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 1.2vw, 1.1rem);
+  line-height: 1.85;
+}
+
+
+/* =====================================================
+   MISC UTILITIES
+   ===================================================== */
+
+/* Decorative ornament divider (e.g. ✦ ✦ ✦) */
+.ornament {
+  color: var(--gold-dk);
+  font-size: 1.2rem;
+  letter-spacing: 0.5em;
+  margin: 24px 0;
+  opacity: 0.5;
+  text-align: center;
+  user-select: none;
+}
+
+/* Global spacing between sections */
+section {
+  margin-bottom: 80px;
+}
+
+/* Shared eyebrow label style (used outside .about-content too) */
+.eyebrow {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* Fade-in animation class — added to elements that should
+   animate into view on scroll (triggered by JS IntersectionObserver) */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s var(--ease-silk);
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Page-level entrance animation used on detail pages */
+.page-fade {
+  animation: pageFade 0.6s var(--ease-silk) both;
+}
+
+@keyframes pageFade {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* =====================================================
+   RESPONSIVE — TABLET  (≤ 1024px)
+   ===================================================== */
+
+@media (max-width: 1024px) {
+
+  /* Narrow sidebar slightly to free up content space */
+  .sidebar {
+    width: 180px;
+    padding: 30px 20px;
+  }
+
+  .main-content {
+    margin-left: 180px;
+    width: calc(100% - 180px);
+  }
+
+  .hero-text {
+    max-width: 600px;
+    padding: 30px;
+  }
+
+  .hero-text h1 {
+    font-size: clamp(2rem, 5vw, 4rem);
+  }
+
+}
+
+
+/* =====================================================
+   RESPONSIVE — MOBILE  (≤ 768px)
+   ===================================================== */
+
+@media (max-width: 768px) {
+
+  /* Switch from flex row (sidebar + content) to stacked block layout */
+  body {
+    display: block !important;
+    overflow-x: hidden;
+  }
+
+  /* Show hamburger button */
+  .menu-toggle {
+    display: flex;
+    background: rgba(10, 9, 6, 0.75);
+    z-index: 300;
+  }
+
+  /* Sidebar slides off-screen by default.
+     Glassmorphism effect (backdrop-filter) gives a premium feel
+     on mobile where the sidebar overlaps content. */
+  .sidebar {
+    background: rgba(26, 39, 68, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
+    transform: translateX(-100%);
+    transition: transform 0.4s var(--ease-silk);
+    z-index: 250;
+    /* Override the ::before texture to allow glassmorphism to show */
+    overflow: visible;
+  }
+
+  /* JS adds .open class to slide sidebar into view */
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Content fills full width — no sidebar offset */
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  .timeline {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 20px;
+  }
+
+  /* Add padding to about page so content isn't touching screen edges */
+  .about-page {
+    padding: 80px 24px;
+  }
+
+  /* Reduce hero detail text padding on mobile */
+  .hero-detail-text {
+    padding: 32px 24px;
+  }
+
+  /* Move fixed back button so it doesn't obscure the hamburger */
+  .nav-btn--back {
+    right: 16px;
+    top: 16px;
+  }
+
+}
+
+
+/* =====================================================
+   RESPONSIVE — SMALL MOBILE  (≤ 480px)
+   ===================================================== */
+
+@media (max-width: 480px) {
+
+  .hero-text {
+    padding: 16px;
+  }
+
+  .hero-text h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-text p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .panel-bg {
+    min-height: 50vh;
+  }
+
+  .detail-content {
+    padding: 32px 16px 60px;
+  }
+
+  .nav-btn {
+    padding: 10px 16px;
+    font-size: 0.6rem;
+  }
+
+}

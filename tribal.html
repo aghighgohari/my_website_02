@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Tribal Survival — Unroll History</title>
+
+  <!--
+    Two preconnect hints to speed up Google Fonts:
+    first opens the DNS lookup, second opens the font file connection.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;1,9..40,300&display=swap" rel="stylesheet">
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!--
+  page-fade triggers the CSS entrance animation in style.css,
+  pairing with the JS fade-out on navigation away from this page.
+-->
+<body class="page-fade">
+
+  <!--
+    Hamburger button — hidden on desktop (CSS display:none),
+    visible on mobile. JS toggles .open on the sidebar when clicked.
+  -->
+  <button class="menu-toggle" aria-label="Open navigation menu">☰</button>
+
+  <!--
+    Dark overlay behind the open sidebar on mobile.
+    JS adds/removes .active to show/hide it.
+    Tapping it closes the menu.
+  -->
+  <div class="sidebar-overlay" aria-hidden="true"></div>
+
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────────
+       Fixed left panel. Always visible on desktop,
+       slides in over content on mobile via JS + CSS transform.
+  ───────────────────────────────────────────────────────── -->
+  <aside class="sidebar" aria-label="Site navigation">
+
+    <!-- Logo always links back to the home page -->
+    <a href="main_index.html" class="sidebar-logo">Unroll<br>History</a>
+    <p class="sidebar-tagline">Persian Rugs &amp; Time</p>
+
+    <!-- Gold gradient rule separating logo from nav -->
+    <div class="sidebar-divider" aria-hidden="true"></div>
+
+    <!--
+      Timeline nav — .active on Tribal Survival marks the current page.
+      No timeline-fill needed here; scroll progress only
+      applies to the home page (main_index.html).
+    -->
+    <nav class="timeline" aria-label="Historical eras">
+      <div class="timeline-track" aria-hidden="true"></div>
+
+      <a class="tl-item" href="golden.html">
+        The Golden Age
+        <span class="tl-date">1501–1722</span>
+      </a>
+
+      <!-- .active marks this as the current page -->
+      <a class="tl-item active" href="tribal.html">
+        Tribal Survival
+        <span class="tl-date">1722–1850</span>
+      </a>
+
+      <a class="tl-item" href="commercial.html">
+        Commercial Boom
+        <span class="tl-date">1850–1914</span>
+      </a>
+
+      <a class="tl-item" href="modern.html">
+        Modern Revival
+        <span class="tl-date">1925–Today</span>
+      </a>
+
+      <!-- Fixed: was linking to index.html, corrected to about.html -->
+      <a class="tl-item tl-about" href="about.html">About</a>
+    </nav>
+
+  </aside><!-- end .sidebar -->
+
+
+  <!--
+    Fixed "back" button — stays visible in the top-right corner
+    while reading so users can return to the timeline at any point
+    without scrolling back to the top.
+  -->
+  <a href="main_index.html" class="nav-btn nav-btn--back">← Timeline</a>
+
+
+  <!-- ── MAIN CONTENT ───────────────────────────────────────
+       Offset from sidebar on desktop via CSS margin-left.
+       Full width on mobile (margin reset in media query).
+  ───────────────────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- ── HERO IMAGE ──────────────────────────────────────
+         Full-bleed image with title overlaid at the bottom.
+         The CSS ::before gradient on .hero-detail ensures
+         text stays legible over any image brightness.
+    ─────────────────────────────────────────────────────── -->
+    <section class="hero-detail" aria-label="Article header">
+      <img
+        src="My_website_01_lion-thumb.jpg"
+        alt="A tribal lion rug woven by Qashqai nomads in the post-Safavid era"
+      >
+      <div class="hero-detail-text">
+        <span class="hero-detail-eyebrow">Post-Safavid Era · 1722–1850</span>
+        <h1>The Tribal Survival</h1>
+      </div>
+    </section>
+
+
+    <!-- ── ARTICLE BODY ────────────────────────────────────
+         Centred reading column (max-width set in CSS).
+         Pull-quote and ornament divider break up the text
+         and give the page visual rhythm between sections.
+    ─────────────────────────────────────────────────────── -->
+    <article class="detail-content">
+
+      <h2>The Nomadic Memory</h2>
+      <span class="date">Post-Safavid Era &nbsp;·&nbsp; 1722–1850</span>
+
+      <p>
+        When the Safavid Empire collapsed in 1722, the royal workshops fell silent. Court patronage
+        evaporated and the centralized design tradition dissolved almost overnight. What emerged from
+        its absence was something rawer — and in many ways more honest.
+      </p>
+
+      <p>
+        Weaving passed back into the hands of nomadic tribes: the Qashqai, the Bakhtiari, the Kurdish
+        weavers of the Zagros Mountains. Without cartoons or court designers, weavers worked from
+        memory — patterns passed down through generations, stored not on paper but in hands and eyes.
+      </p>
+
+      <!--
+        Pull-quote lifts the most evocative line from the body text —
+        a visual and editorial anchor that rewards readers who skim.
+      -->
+      <div class="pull-quote">
+        <p>Without cartoons or court designers, weavers worked from memory — stored not on paper but in hands and eyes.</p>
+      </div>
+
+      <p>
+        The result was a new visual language. Geometric forms replaced sinuous arabesques. Animals,
+        trees, and abstract symbols filled the field. No two rugs were identical — and that was the
+        point. Each piece was not a reproduction of a template, but an expression of a life in motion.
+      </p>
+
+      <!--
+        Detail image — .detail-img gives consistent border,
+        shadow, and full-width treatment across all era pages.
+      -->
+      <img
+        src="My_website_01_hero-pattern.jpg"
+        class="detail-img"
+        alt="Geometric tribal rug pattern showing the abstract symbols and bold forms typical of nomadic weaving"
+      >
+
+      <!-- Decorative section divider — hidden from screen readers -->
+      <div class="ornament" aria-hidden="true">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+      <p>
+        Color variations known as <em>abrash</em> — subtle shifts in hue mid-rug caused by different
+        dye batches — became prized as marks of authenticity. A rug without abrash was a rug made by
+        machine. A rug with it carried the mark of a life: the particular morning when one pot ran dry
+        and another was mixed by different hands.
+      </p>
+
+
+      <!-- ── PREV / NEXT NAV ───────────────────────────────
+           Sequential navigation between eras.
+           Tribal Survival sits between Golden Age and Commercial Boom
+           so both prev and next links are active.
+      ──────────────────────────────────────────────────── -->
+      <nav class="detail-nav" aria-label="Article navigation">
+        <a href="golden.html" class="nav-btn">← The Golden Age</a>
+        <a href="commercial.html" class="nav-btn">The Commercial Boom →</a>
+      </nav>
+
+    </article>
+
+  </main><!-- end .main-content -->
+
+  <!--
+    Script at end of body so the full DOM is parsed before JS runs.
+  -->
+  <script src="script.js"></script>
+</body>
+</html>

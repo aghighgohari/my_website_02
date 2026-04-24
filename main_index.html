@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unroll History — A Journey Through Persian Rugs</title>
+
+  <!--
+    Two preconnect hints speed up Google Fonts loading:
+    the first opens the DNS connection, the second (gstatic)
+    opens the connection to where the actual font files are served.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!--
+    Three typefaces in one request:
+    - Cinzel              → headings (classical Roman feel)
+    - Cormorant Garamond  → body text (editorial serif)
+    - DM Sans             → UI labels, nav, metadata
+  -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;1,9..40,300&display=swap" rel="stylesheet">
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!--
+  No page-fade class here — this is the home page so there's
+  no "incoming" transition. The hero animates in via heroReveal
+  keyframes defined in style.css instead.
+-->
+<body>
+
+  <!--
+    Hamburger button — hidden on desktop (display:none in CSS),
+    visible on mobile. JS toggles .open on the sidebar when clicked.
+  -->
+  <button class="menu-toggle" aria-label="Open navigation menu">☰</button>
+
+  <!--
+    Dark overlay behind the sidebar on mobile.
+    JS adds/removes .active to show/hide it.
+    Tapping this overlay closes the sidebar.
+  -->
+  <div class="sidebar-overlay" aria-hidden="true"></div>
+
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────────
+       Fixed left panel. On desktop always visible.
+       On mobile it slides in over the content.
+  ───────────────────────────────────────────────────────── -->
+  <aside class="sidebar" aria-label="Site navigation">
+
+    <!-- Logo — always links back to this home page -->
+    <a href="main_index.html" class="sidebar-logo">Unroll<br>History</a>
+    <p class="sidebar-tagline">Persian Rugs &amp; Time</p>
+
+    <!-- Gold gradient rule separating logo from nav items -->
+    <div class="sidebar-divider" aria-hidden="true"></div>
+
+    <!--
+      Timeline nav — two types of links:
+      1. Anchor links (#id) that scroll to sections on this page
+      2. Page links that navigate to individual era detail pages
+      The JS IntersectionObserver watches sections and adds .active
+      to the matching nav item as the user scrolls.
+      timeline-fill is the gold bar animated by the scroll listener in script.js.
+    -->
+    <nav class="timeline" aria-label="Historical eras">
+      <div class="timeline-track" aria-hidden="true"></div>
+      <div class="timeline-fill" id="timelineFill" aria-hidden="true"></div>
+
+      <a class="tl-item active" href="#start">
+        Prologue
+        <span class="tl-date">Introduction</span>
+      </a>
+
+      <a class="tl-item" href="#golden">
+        The Golden Age
+        <span class="tl-date">1501–1722</span>
+      </a>
+
+      <a class="tl-item" href="#tribal">
+        Tribal Survival
+        <span class="tl-date">1722–1850</span>
+      </a>
+
+      <a class="tl-item" href="#commercial">
+        Commercial Boom
+        <span class="tl-date">1850–1914</span>
+      </a>
+
+      <a class="tl-item" href="#modern">
+        Modern Revival
+        <span class="tl-date">1925–Today</span>
+      </a>
+
+      <!-- About link — navigates to a separate page, not an anchor -->
+      <a class="tl-item tl-about" href="about.html">
+        About
+        <span class="tl-date">The Project</span>
+      </a>
+    </nav>
+
+  </aside><!-- end .sidebar -->
+
+
+  <!-- ── MAIN CONTENT ───────────────────────────────────────
+       Each section is a full-viewport panel the user scrolls through.
+       section[id] is required for the IntersectionObserver in script.js
+       to detect which panel is in view and highlight the nav item.
+  ───────────────────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- ── HERO PANEL ──────────────────────────────────────
+         Introductory panel with site title and scroll prompt.
+         Background image set inline so each panel can have
+         its own image without needing separate CSS classes.
+    ─────────────────────────────────────────────────────── -->
+    <section class="panel panel--hero" id="start">
+      <div class="panel-bg" style="background-image: url('My_website_01_hero-main.jpg');">
+        <div class="hero-text">
+          <span class="hero-eyebrow">An Interactive Archive</span>
+          <h1>Unroll<br>History</h1>
+          <p>From royal courts to nomadic migrations — explore five centuries of Persian rug-making, woven in silk and memory.</p>
+          <!-- Animated scroll cue — the ::after pseudo-element draws the pulsing line -->
+          <span class="hero-scroll-hint" aria-hidden="true">Scroll to begin</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── ERA PANELS ──────────────────────────────────────
+         Each era is a full-height panel linking to its detail page.
+         Hovering reveals the title and tagline (CSS transition).
+         The entire panel is an <a> tag so the full area is clickable.
+    ─────────────────────────────────────────────────────── -->
+
+    <!-- Golden Age -->
+    <section class="panel" id="golden">
+      <a class="era-panel panel-bg" href="golden.html" style="background-image: url('My_website_01_golden-hero.jpg');" aria-label="Enter The Golden Age, 1501 to 1722">
+        <div class="panel-content">
+          <span class="panel-era-label">1501 &mdash; 1722</span>
+          <h2>The Golden Age</h2>
+          <p class="panel-tagline">When weaving became a royal art form</p>
+        </div>
+        <span class="panel-arrow" aria-hidden="true">Enter</span>
+      </a>
+    </section>
+
+    <!-- Tribal Survival -->
+    <section class="panel" id="tribal">
+      <a class="era-panel panel-bg" href="tribal.html" style="background-image: url('My_website_01_qashqai.jpg');" aria-label="Enter Tribal Survival, 1722 to 1850">
+        <div class="panel-content">
+          <span class="panel-era-label">1722 &mdash; 1850</span>
+          <h2>The Tribal Survival</h2>
+          <p class="panel-tagline">Memory woven into geometric form</p>
+        </div>
+        <span class="panel-arrow" aria-hidden="true">Enter</span>
+      </a>
+    </section>
+
+    <!-- Commercial Boom -->
+    <section class="panel" id="commercial">
+      <a class="era-panel panel-bg" href="commercial.html" style="background-image: url('My_website_01_commercial-thumb.jpg');" aria-label="Enter The Commercial Boom, 1850 to 1914">
+        <div class="panel-content">
+          <span class="panel-era-label">1850 &mdash; 1914</span>
+          <h2>The Commercial Boom</h2>
+          <p class="panel-tagline">The Western drawing room discovers the East</p>
+        </div>
+        <span class="panel-arrow" aria-hidden="true">Enter</span>
+      </a>
+    </section>
+
+    <!-- Modern Revival -->
+    <section class="panel" id="modern">
+      <a class="era-panel panel-bg" href="modern.html" style="background-image: url('My_website_01_modern-thumb.jpg');" aria-label="Enter The Modern Revival, 1925 to today">
+        <div class="panel-content">
+          <span class="panel-era-label">1925 &mdash; Today</span>
+          <h2>The Modern Revival</h2>
+          <p class="panel-tagline">Craft as cultural preservation</p>
+        </div>
+        <span class="panel-arrow" aria-hidden="true">Enter</span>
+      </a>
+    </section>
+
+  </main><!-- end .main-content -->
+
+
+  <!--
+    Script at end of <body> so the full DOM is available when it runs.
+    No DOMContentLoaded wrapper needed because of this placement.
+  -->
+  <script src="script.js"></script>
+</body>
+</html>

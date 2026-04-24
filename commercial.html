@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Commercial Boom — Unroll History</title>
+
+  <!--
+    Two preconnect hints to speed up Google Fonts:
+    first opens the DNS lookup, second opens the font file connection.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;1,9..40,300&display=swap" rel="stylesheet">
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!--
+  page-fade triggers the CSS entrance animation in style.css,
+  giving a smooth fade-in that pairs with the JS fade-out on exit.
+-->
+<body class="page-fade">
+
+  <!--
+    Hamburger button — hidden on desktop, shown on mobile.
+    JS in script.js toggles .open on the sidebar when clicked.
+  -->
+  <button class="menu-toggle" aria-label="Open navigation menu">☰</button>
+
+  <!--
+    Dark overlay behind the sidebar on mobile.
+    JS adds/removes .active to show/hide it.
+    Tapping it closes the menu.
+  -->
+  <div class="sidebar-overlay" aria-hidden="true"></div>
+
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────────
+       Fixed left panel. Always visible on desktop,
+       slides in over content on mobile.
+  ───────────────────────────────────────────────────────── -->
+  <aside class="sidebar" aria-label="Site navigation">
+
+    <!-- Logo always links back to the home page -->
+    <a href="main_index.html" class="sidebar-logo">Unroll<br>History</a>
+    <p class="sidebar-tagline">Persian Rugs &amp; Time</p>
+
+    <!-- Gold gradient rule separating logo from nav -->
+    <div class="sidebar-divider" aria-hidden="true"></div>
+
+    <!--
+      Timeline nav — .active is on the Commercial Boom item
+      to highlight the current page in the sidebar.
+      No timeline-fill here because the scroll fill only
+      applies to the home page (main_index.html).
+    -->
+    <nav class="timeline" aria-label="Historical eras">
+      <div class="timeline-track" aria-hidden="true"></div>
+
+      <a class="tl-item" href="golden.html">
+        The Golden Age
+        <span class="tl-date">1501–1722</span>
+      </a>
+
+      <a class="tl-item" href="tribal.html">
+        Tribal Survival
+        <span class="tl-date">1722–1850</span>
+      </a>
+
+      <!-- .active marks this as the current page -->
+      <a class="tl-item active" href="commercial.html">
+        Commercial Boom
+        <span class="tl-date">1850–1914</span>
+      </a>
+
+      <a class="tl-item" href="modern.html">
+        Modern Revival
+        <span class="tl-date">1925–Today</span>
+      </a>
+
+      <!-- Fixed: was linking to index.html, corrected to about.html -->
+      <a class="tl-item tl-about" href="about.html">About</a>
+    </nav>
+
+  </aside><!-- end .sidebar -->
+
+
+  <!--
+    Fixed "back" button — always visible in the top-right while
+    reading, so users can return to the timeline at any point
+    without scrolling back to the top.
+  -->
+  <a href="main_index.html" class="nav-btn nav-btn--back">← Timeline</a>
+
+
+  <!-- ── MAIN CONTENT ───────────────────────────────────────
+       Offset from the sidebar on desktop via CSS margin-left.
+       Full width on mobile.
+  ───────────────────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- ── HERO IMAGE ──────────────────────────────────────
+         Full-bleed image with title overlaid at the bottom.
+         The CSS gradient overlay on ::before ensures the text
+         stays legible regardless of image brightness.
+    ─────────────────────────────────────────────────────── -->
+    <section class="hero-detail" aria-label="Article header">
+      <img
+        src="My_website_01_commercial-thumb.jpg"
+        alt="A late 19th-century Persian carpet produced during the commercial boom era"
+      >
+      <div class="hero-detail-text">
+        <span class="hero-detail-eyebrow">The Industrial Age · 1850–1914</span>
+        <h1>The Commercial Boom</h1>
+      </div>
+    </section>
+
+
+    <!-- ── ARTICLE BODY ────────────────────────────────────
+         Readable column centred on the page (max-width in CSS).
+         Sections are broken up with a pull-quote and ornament
+         divider to pace the reading experience.
+    ─────────────────────────────────────────────────────── -->
+    <article class="detail-content">
+
+      <h2>The Global Market</h2>
+      <span class="date">The Industrial Age &nbsp;·&nbsp; 1850–1914</span>
+
+      <p>
+        In the second half of the 19th century, Persian rugs discovered a new patron: the Western
+        drawing room. As industrial wealth expanded the European and American middle classes, a taste
+        for the exotic — for the handmade, the ancient, the far-away — made Persian rugs into status
+        symbols across London, Paris, and New York.
+      </p>
+
+      <p>
+        Workshops in Tabriz, Isfahan, and Kashan adapted quickly. Designs softened. Medallions became
+        less dense, colors were muted to suit Victorian interiors, and floral patterns grew more
+        naturalistic to appeal to European taste.
+      </p>
+
+      <!--
+        Pull-quote highlights the key idea of the section —
+        a visual anchor that breaks up the text and rewards
+        readers who skim before reading in full.
+      -->
+      <div class="pull-quote">
+        <p>The carpet was being translated — not just sold, but rewritten for a new audience.</p>
+      </div>
+
+      <!--
+        Article image — uses detail-img class for consistent
+        border, shadow, and full-width treatment across all era pages.
+        Note: this image shows a commercial-era detail, not the modern thumb.
+      -->
+      <img
+        src="My_website_01_commercial-detail.jpg"
+        class="detail-img"
+        alt="Detail of a Ziegler-era carpet showing adapted floral motifs for Western markets"
+      >
+
+      <!-- Decorative ornament divider between content sections -->
+      <div class="ornament" aria-hidden="true">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+      <p>
+        Trading houses — most notably Ziegler &amp; Co. of Manchester — opened direct partnerships
+        with Persian workshops, standardizing production and introducing synthetic dyes imported from
+        Germany. The efficiency was remarkable. The cultural cost was real.
+      </p>
+
+      <p>
+        This era marks the first tension between craft and commerce that would define the century to
+        come — a tension the modern revival would eventually have to resolve.
+      </p>
+
+
+      <!-- ── PREV / NEXT NAV ───────────────────────────────
+           Lets users move sequentially through the eras
+           without going back to the home page each time.
+           Matches the chronological order of the timeline.
+      ──────────────────────────────────────────────────── -->
+      <nav class="detail-nav" aria-label="Article navigation">
+        <a href="tribal.html" class="nav-btn">← The Tribal Survival</a>
+        <a href="modern.html" class="nav-btn">The Modern Revival →</a>
+      </nav>
+
+    </article>
+
+  </main><!-- end .main-content -->
+
+  <!--
+    Script at end of body so the full DOM is parsed before JS runs.
+  -->
+  <script src="script.js"></script>
+</body>
+</html>
